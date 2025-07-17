@@ -7,38 +7,46 @@
 
 import Foundation
 
+enum MovieCategory: String, CaseIterable {
+    case popular = "popular"
+    case nowPlaying = "now_playing"
+    case upcoming = "upcoming"
+    
+    var title: String {
+        switch self {
+        case .popular: return "Popular"
+        case .nowPlaying: return "Now Playing"
+        case .upcoming: return "Upcoming"
+        }
+    }
+}
+
+enum NetworkError: Error {
+    case invalidURL
+    case noData
+}
 
 class MovieListService {
     
     static let shared = MovieListService()
     init(){}
      
-    func fetchPopularMovies(page: Int = 1, completion: @escaping (Result<[Movie], Error>) -> Void) {
-            let endpoint = "\(APIConfig.baseURL)/movie/popular"
-            guard var components = URLComponents(string: endpoint) else {
-                completion(.failure(URLError(.badURL)))
+    func fetchMovies(for category: MovieCategory, page: Int = 1, completion: @escaping (Result<[Movie], Error>) -> Void) {
+        let urlString = "\(APIConfig.baseURL)\(category.rawValue)?api_key=\(APIConfig.apiKey)&language=en-US&page=\(page)"
+            
+            guard let url = URL(string: urlString) else {
+                completion(.failure(NetworkError.invalidURL))
                 return
             }
 
-            components.queryItems = [
-                URLQueryItem(name: "api_key", value: APIConfig.apiKey),
-                URLQueryItem(name: "language", value: "en-US"),
-                URLQueryItem(name: "page", value: "\(page)")
-            ]
-
-            guard let url = components.url else {
-                completion(.failure(URLError(.badURL)))
-                return
-            }
-
-            URLSession.shared.dataTask(with: url) { data, _, error in
+            let task = URLSession.shared.dataTask(with: url) { data, _, error in
                 if let error = error {
                     completion(.failure(error))
                     return
                 }
 
                 guard let data = data else {
-                    completion(.failure(URLError(.badServerResponse)))
+                    completion(.failure(NetworkError.noData))
                     return
                 }
 
@@ -48,7 +56,9 @@ class MovieListService {
                 } catch {
                     completion(.failure(error))
                 }
-            }.resume()
+            }
+
+            task.resume()
         }
     
 }

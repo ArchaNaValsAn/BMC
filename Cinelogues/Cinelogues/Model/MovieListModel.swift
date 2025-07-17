@@ -8,35 +8,42 @@
 import Foundation
 
 struct MovieListResponse: Codable {
+    let dates: Dates?
     let page: Int
     let results: [Movie]
-    let totalResults: Int
-    let totalPages: Int
+    let totalPages, totalResults: Int
 
     enum CodingKeys: String, CodingKey {
-        case page
-        case results
-        case totalResults = "total_results"
+        case dates, page, results
         case totalPages = "total_pages"
+        case totalResults = "total_results"
     }
 }
 
-struct Movie: Codable, Identifiable {
+struct Dates: Codable {
+    let maximum, minimum: String
+}
+
+struct Movie: Codable {
     let id: Int
     let title: String
     let overview: String
-    let posterPath: String?
-    let backdropPath: String?
+    let posterPath: String
+    let backdropPath: String
     let releaseDate: String
     let voteAverage: Double
+    let genreIDS: [Int]
+    let originalLanguage: String
 
     enum CodingKeys: String, CodingKey {
-        case id
-        case title
-        case overview
+        case id, title, overview
         case posterPath = "poster_path"
         case backdropPath = "backdrop_path"
         case releaseDate = "release_date"
         case voteAverage = "vote_average"
+        case genreIDS = "genre_ids"
+        case originalLanguage = "original_language"
     }
 }
+
+

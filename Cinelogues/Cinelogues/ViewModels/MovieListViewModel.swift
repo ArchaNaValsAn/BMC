@@ -7,41 +7,87 @@
 
 import Foundation
 
+import Foundation
+
+protocol MovieListViewModelDelegate: AnyObject {
+    func didUpdateMovies(for category: MovieCategory, movies: [Movie])
+}
+
 class MovieListViewModel {
     
+    private var currentPage: [MovieCategory: Int] = [
+        .popular: 1,
+        .nowPlaying: 1,
+        .upcoming: 1
+    ]
     
-    private(set) var movies: [Movie] = []
-    private var currentPage = 1
-    private var isFetching = false
-    var onMoviesUpdated: (() -> Void)?
-    var onError: ((String) -> Void)?
+    private var isFetching: [MovieCategory: Bool] = [
+        .popular: false,
+        .nowPlaying: false,
+        .upcoming: false
+    ]
     
-    func fetchMovies() {
-        guard !isFetching else { return }
+    private(set) var popularMovies: [Movie] = []
+    private(set) var nowPlayingMovies: [Movie] = []
+    private(set) var upcomingMovies: [Movie] = []
+    
+    var onMoviesUpdated: ((MovieCategory) -> Void)?
+    var onError: ((MovieCategory, String) -> Void)?
+    
+    weak var delegate: MovieListViewModelDelegate?
+    
+    func fetchMovies(for category: MovieCategory) {
+        guard isFetching[category] == false else { return }
         
-        isFetching = true
-        MovieListService.shared.fetchPopularMovies(page: currentPage) { [weak self] result in
+        isFetching[category] = true
+        
+        MovieListService.shared.fetchMovies(for: category, page: currentPage[category] ?? 1) { [weak self] result in
             guard let self = self else { return }
             
             DispatchQueue.main.async {
-                self.isFetching = false
+                self.isFetching[category] = false
+                
                 switch result {
                 case .success(let newMovies):
-                    self.movies += newMovies
-                    self.currentPage += 1
-                    self.onMoviesUpdated?()
+                    switch category {
+                    case .popular:
+                        self.popularMovies += newMovies
+                    case .nowPlaying:
+                        self.nowPlayingMovies += newMovies
+                    case .upcoming:
+                        self.upcomingMovies += newMovies
+                    }
+                    
+                    self.currentPage[category, default: 1] += 1
+                    self.onMoviesUpdated?(category)
+                    self.delegate?.didUpdateMovies(for: category, movies: newMovies)
+                    
                 case .failure(let error):
-                    self.onError?(error.localizedDescription)
+                    self.onError?(category, error.localizedDescription)
                 }
             }
         }
     }
     
-    func fetchNextPage() {
-        currentPage = 1
-        movies = []
-        fetchMovies()
+    func fetchAllCategories() {
+        for category in MovieCategory.allCases {
+            fetchMovies(for: category)
+        }
+    }
+    
+    func resetAndFetch(for category: MovieCategory) {
+        currentPage[category] = 1
+        isFetching[category] = false
+        
+        switch category {
+        case .popular: popularMovies = []
+        case .nowPlaying: nowPlayingMovies = []
+        case .upcoming: upcomingMovies = []
+        }
+        
+        fetchMovies(for: category)
     }
 }
+
 
 
