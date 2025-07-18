@@ -10,16 +10,19 @@ import UIKit
 class MoviesNowViewController: UIViewController {
 
     @IBOutlet weak var popularMoviesCV: UICollectionView!
-    @IBOutlet weak var NowPlayingMoviesCV: UICollectionView!
-    @IBOutlet weak var upcomingMoviesCV: UICollectionView!
+    @IBOutlet weak var movieSearchBar: UISearchBar!
+    
     
     var movies : [Movie] = []
+    var filteredMovies: [Movie] = []
+    var isSearching = false
     
     var favoritedMovieIDs = Set<String>()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCollectionView()
+        setupSearchBar()
     }
     
     private func setupCollectionView() {
@@ -38,13 +41,73 @@ class MoviesNowViewController: UIViewController {
         
         popularMoviesCV.collectionViewLayout = layout
     }
+    
+    private func setupSearchBar() {
+        movieSearchBar.barTintColor = .black
+        movieSearchBar.backgroundImage = UIImage()
+            
+            if let textField = movieSearchBar.value(forKey: "searchField") as? UITextField {
+                textField.backgroundColor = UIColor.black
+                textField.textColor = .white
+                textField.font = UIFont.systemFont(ofSize: 14)
+                textField.attributedPlaceholder = NSAttributedString(
+                    string: "Search here...",
+                    attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray]
+                )
+                textField.layer.cornerRadius = 10
+                textField.clipsToBounds = true
+            }
+
+        movieSearchBar.setImage(UIImage(systemName: "xmark.circle"), for: .clear, state: .normal)
+
+
+
+    }
+    
+    func searchMovies(with searchText: String) {
+        let trimmedText = searchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        
+        if trimmedText.isEmpty {
+            isSearching = false
+            filteredMovies = []
+            popularMoviesCV.reloadData()
+            return
+        }
+
+        isSearching = true
+        filteredMovies = movies.filter {
+            $0.title.lowercased().contains(searchText.lowercased())
+        }.reduce(into: []) { result, movie in
+            if !result.contains(where: { $0.id == movie.id }) {
+                result.append(movie)
+            }
+        }
+
+        if filteredMovies.isEmpty {
+            showNoResultsAlert(for: searchText)
+        }
+        
+        popularMoviesCV.reloadData()
+    }
+    
+    private func showNoResultsAlert(for searchText: String) {
+        let alert = UIAlertController(
+            title: "No Results",
+            message: "No movies found for \"\(searchText)\".",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
+
+
 
 }
 
 extension MoviesNowViewController : UICollectionViewDataSource, UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return movies.count
+        return isSearching ? filteredMovies.count : movies.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -54,7 +117,7 @@ extension MoviesNowViewController : UICollectionViewDataSource, UICollectionView
 
            let movie = movies[indexPath.item]
            let isFavorited = favoritedMovieIDs.contains("\(movie.id)")
-           cell.configure(with: movie, isFavorited: isFavorited)
+            cell.configure(with: isSearching ? filteredMovies[indexPath.row] : movie, isFavorited: isFavorited)
 
            cell.favoriteButtonTapped = { [weak self] isNowFavorited in
                guard let self = self else { return }
@@ -67,12 +130,20 @@ extension MoviesNowViewController : UICollectionViewDataSource, UICollectionView
 
            return cell
     }
-    
-//    func collectionView(_ collectionView: UICollectionView,
-//                        layout collectionViewLayout: UICollectionViewLayout,
-//                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-//        return 16 // Set the vertical space between rows
-//    }
 
+}
+
+extension MoviesNowViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        searchMovies(with: searchText)
+    }
+
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = ""
+        isSearching = false
+        filteredMovies.removeAll()
+        popularMoviesCV.reloadData()
+        searchBar.resignFirstResponder()
+    }
 
 }

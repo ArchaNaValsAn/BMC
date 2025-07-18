@@ -16,8 +16,15 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <searchBar contentMode="redraw" placeholder="Search Movies" translatesAutoresizingMaskIntoConstraints="NO" id="y34-4b-ENd">
+                                <rect key="frame" x="8" y="162" width="393" height="56"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="Y6W-OH-hqX" id="7ZE-qJ-bh6"/>
+                                </connections>
+                            </searchBar>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="LHa-t8-Yad">
-                                <rect key="frame" x="0.0" y="162" width="393" height="622"/>
+                                <rect key="frame" x="0.0" y="226" width="393" height="558"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="20" minimumInteritemSpacing="20" id="jQZ-b0-uYZ">
                                     <size key="itemSize" width="200" height="200"/>
@@ -41,13 +48,17 @@
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="LHa-t8-Yad" secondAttribute="trailing" id="8rE-eQ-GDT"/>
-                            <constraint firstItem="LHa-t8-Yad" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="EJG-Xo-Bz6"/>
+                            <constraint firstItem="y34-4b-ENd" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="8" id="B2t-GW-0eJ"/>
                             <constraint firstItem="LHa-t8-Yad" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="HbI-kU-e4o"/>
+                            <constraint firstItem="LHa-t8-Yad" firstAttribute="top" secondItem="y34-4b-ENd" secondAttribute="bottom" constant="8" id="KrM-wP-T0H"/>
+                            <constraint firstItem="y34-4b-ENd" firstAttribute="trailing" secondItem="vDu-zF-Fre" secondAttribute="trailing" constant="8" id="XBr-h2-LXH"/>
+                            <constraint firstItem="y34-4b-ENd" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="bUb-Xy-HJK"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="LHa-t8-Yad" secondAttribute="bottom" id="tDx-z6-m1V"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="U1L-85-hUv"/>
                     <connections>
+                        <outlet property="movieSearchBar" destination="y34-4b-ENd" id="b9m-D7-GYd"/>
                         <outlet property="popularMoviesCV" destination="LHa-t8-Yad" id="Vbi-5H-N3G"/>
                     </connections>
                 </viewController>
