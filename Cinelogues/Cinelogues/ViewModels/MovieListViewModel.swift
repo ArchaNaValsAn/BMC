@@ -6,15 +6,6 @@
 //
 
 import Foundation
-
-//
-//  MovieListViewModel.swift
-//  Cinelogue
-//
-//  Created by AJ on 17/07/25.
-//
-
-import Foundation
 import UIKit
 
 protocol MovieListViewModelDelegate: AnyObject {
