@@ -133,15 +133,26 @@ class MoviesNowViewController: UIViewController {
         popularMoviesCV.reloadData()
     }
     
-    private func showNoResultsAlert(for searchText: String) {
+    func showNoResultsAlert(for searchText: String) {
         let alert = UIAlertController(
             title: "No Results",
             message: "No movies found for \"\(searchText)\".",
             preferredStyle: .alert
         )
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
+
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak self] _ in
+            guard let self = self else { return }
+            self.movieSearchBar.text = ""
+            self.movieSearchBar.resignFirstResponder()
+            
+            self.isSearching = false
+            self.filteredMovies.removeAll()
+            self.popularMoviesCV.reloadData()
+        }))
+
         present(alert, animated: true)
     }
+
     
     @IBAction func favoriteButtonAction(_ sender: Any) {
         
