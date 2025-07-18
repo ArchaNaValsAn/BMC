@@ -10,8 +10,8 @@ import UIKit
 class MoviesNowViewController: UIViewController {
 
     @IBOutlet weak var popularMoviesCV: UICollectionView!
-    @IBOutlet weak var movieSearchBar: UISearchBar!
-    
+    @IBOutlet weak var movieSearchBar: UISearchBar!    
+    @IBOutlet weak var favoritesTabButton: UIButton!
     
     var movies : [Movie] = []
     var filteredMovies: [Movie] = []
@@ -30,6 +30,11 @@ class MoviesNowViewController: UIViewController {
         popularMoviesCV.register(nib, forCellWithReuseIdentifier: MoviesCollectionViewCell.identifier)
         popularMoviesCV.delegate = self
         popularMoviesCV.dataSource = self
+        
+        let image = UIImage(systemName: "heart.fill")
+        favoritesTabButton.setImage(image, for: .normal)
+        favoritesTabButton.tintColor = .systemRed
+       
         
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -99,6 +104,16 @@ class MoviesNowViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
+    
+    @IBAction func favoriteButtonAction(_ sender: Any) {
+        
+        let storyboard = UIStoryboard(name: "FavoritesViewController", bundle: nil)
+        if let favoritesVC = storyboard.instantiateViewController(withIdentifier: "FavoritesViewController") as? FavoritesViewController {
+           // moviesNowVC.viewModel = self.viewModel
+//            moviesNowVC.movies = self.movies
+            self.navigationController?.pushViewController(favoritesVC, animated: true)
+        }
+        
 
 
 

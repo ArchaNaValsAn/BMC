@@ -16,13 +16,26 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <searchBar contentMode="redraw" placeholder="Search Movies" translatesAutoresizingMaskIntoConstraints="NO" id="y34-4b-ENd">
-                                <rect key="frame" x="8" y="162" width="393" height="56"/>
-                                <textInputTraits key="textInputTraits"/>
-                                <connections>
-                                    <outlet property="delegate" destination="Y6W-OH-hqX" id="7ZE-qJ-bh6"/>
-                                </connections>
-                            </searchBar>
+                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="U3L-ba-xdl">
+                                <rect key="frame" x="0.0" y="162" width="393" height="56"/>
+                                <subviews>
+                                    <searchBar contentMode="redraw" placeholder="Search Movies" translatesAutoresizingMaskIntoConstraints="NO" id="y34-4b-ENd">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="56"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="Y6W-OH-hqX" id="7ZE-qJ-bh6"/>
+                                        </connections>
+                                    </searchBar>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EZH-tk-Jx2">
+                                        <rect key="frame" x="62" y="21" width="331" height="14"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain"/>
+                                        <connections>
+                                            <action selector="favoriteButtonAction:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="uzR-4h-mcT"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="LHa-t8-Yad">
                                 <rect key="frame" x="0.0" y="226" width="393" height="558"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -47,17 +60,18 @@
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstAttribute="trailing" secondItem="U3L-ba-xdl" secondAttribute="trailing" id="5qm-u6-ftM"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="LHa-t8-Yad" secondAttribute="trailing" id="8rE-eQ-GDT"/>
-                            <constraint firstItem="y34-4b-ENd" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="8" id="B2t-GW-0eJ"/>
                             <constraint firstItem="LHa-t8-Yad" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="HbI-kU-e4o"/>
-                            <constraint firstItem="LHa-t8-Yad" firstAttribute="top" secondItem="y34-4b-ENd" secondAttribute="bottom" constant="8" id="KrM-wP-T0H"/>
-                            <constraint firstItem="y34-4b-ENd" firstAttribute="trailing" secondItem="vDu-zF-Fre" secondAttribute="trailing" constant="8" id="XBr-h2-LXH"/>
-                            <constraint firstItem="y34-4b-ENd" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="bUb-Xy-HJK"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="top" secondItem="U3L-ba-xdl" secondAttribute="top" id="P6O-Iw-55E"/>
+                            <constraint firstItem="LHa-t8-Yad" firstAttribute="top" secondItem="U3L-ba-xdl" secondAttribute="bottom" constant="8" id="fEK-LJ-aZY"/>
+                            <constraint firstItem="U3L-ba-xdl" firstAttribute="leading" secondItem="5EZ-qb-Rvc" secondAttribute="leading" id="iBP-h1-Sea"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="LHa-t8-Yad" secondAttribute="bottom" id="tDx-z6-m1V"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="U1L-85-hUv"/>
                     <connections>
+                        <outlet property="favoritesTabButton" destination="EZH-tk-Jx2" id="ur4-8V-5nP"/>
                         <outlet property="movieSearchBar" destination="y34-4b-ENd" id="b9m-D7-GYd"/>
                         <outlet property="popularMoviesCV" destination="LHa-t8-Yad" id="Vbi-5H-N3G"/>
                     </connections>

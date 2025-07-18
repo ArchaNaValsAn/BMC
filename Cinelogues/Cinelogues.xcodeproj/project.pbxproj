@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		21D358C92E2AB8580070C3F0 /* FavoriteMovies+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D358C72E2AB8580070C3F0 /* FavoriteMovies+CoreDataClass.swift */; };
+		21D358CA2E2AB8580070C3F0 /* FavoriteMovies+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D358C82E2AB8580070C3F0 /* FavoriteMovies+CoreDataProperties.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		21C876D42E29379D0051606C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,6 +32,8 @@
 		21C876BA2E29379B0051606C /* Cinelogues.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cinelogues.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		21C876D32E29379D0051606C /* CineloguesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CineloguesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		21C876DD2E29379D0051606C /* CineloguesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CineloguesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		21D358C72E2AB8580070C3F0 /* FavoriteMovies+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "FavoriteMovies+CoreDataClass.swift"; path = "Cinelogues/DataManager/FavoriteMovies+CoreDataClass.swift"; sourceTree = "<group>"; };
+		21D358C82E2AB8580070C3F0 /* FavoriteMovies+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "FavoriteMovies+CoreDataProperties.swift"; path = "Cinelogues/DataManager/FavoriteMovies+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -88,6 +95,8 @@
 		21C876B12E29379B0051606C = {
 			isa = PBXGroup;
 			children = (
+				21D358C72E2AB8580070C3F0 /* FavoriteMovies+CoreDataClass.swift */,
+				21D358C82E2AB8580070C3F0 /* FavoriteMovies+CoreDataProperties.swift */,
 				21C876BC2E29379B0051606C /* Cinelogues */,
 				21C876D62E29379D0051606C /* CineloguesTests */,
 				21C876E02E29379D0051606C /* CineloguesUITests */,
@@ -249,6 +258,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				21D358C92E2AB8580070C3F0 /* FavoriteMovies+CoreDataClass.swift in Sources */,
+				21D358CA2E2AB8580070C3F0 /* FavoriteMovies+CoreDataProperties.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
