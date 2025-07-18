@@ -50,6 +50,19 @@ class FavoritesViewController: UIViewController {
         let entities = FavoriteMovieManager.shared.fetchAllFavorites()
         favoriteMovies = entities.compactMap { Movie(from: $0) }
         favoritesCollectionView.reloadData()
+        showEmptyFavoritesAlert()
+    }
+    
+    private func showEmptyFavoritesAlert() {
+        let alert = UIAlertController(title: "No Favorites",
+                                      message: "You have no favorite movies yet.",
+                                      preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak self] _ in
+            self?.navigationController?.popViewController(animated: true)
+        }))
+        
+        present(alert, animated: true)
     }
 
     @objc private func favoritesUpdated(_ notification: Notification) {
