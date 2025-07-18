@@ -13,21 +13,28 @@ protocol PopularMovieCarouselCellDelegate: AnyObject {
 
 class PopularMovieCarouselCell: UICollectionViewCell {
     
-    @IBOutlet weak var carouselImageView: UIImageView!
+    @IBOutlet private weak var carouselImageView: UIImageView!
+    @IBOutlet private weak var moreButton: UIButton!
     
     static let identifier = "PopularMovieCarouselCell"
     weak var delegate: PopularMovieCarouselCellDelegate?
-
     
-    private var movies: Movie?
+    private var movie: Movie?
+    private var dataTask: URLSessionDataTask?
     
-    @IBOutlet weak var moreButton: UIButton!
     override func awakeFromNib() {
         super.awakeFromNib()
-        updateUIElements()
+        configureUI()
+        
         carouselImageView.accessibilityIdentifier = "carouselImageView"
         moreButton.accessibilityIdentifier = "moreButton"
-        
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        carouselImageView.image = nil
+        dataTask?.cancel()
+        dataTask = nil
     }
     
     override func layoutSubviews() {
@@ -35,7 +42,8 @@ class PopularMovieCarouselCell: UICollectionViewCell {
         carouselImageView.frame = contentView.bounds
     }
     
-    private func updateUIElements() {
+    // MARK: - Button Configuration
+    private func configureUI() {
         var config = UIButton.Configuration.borderless()
         config.attributedTitle = AttributedString(" Movies", attributes: .init([
             .font: UIFont.italicSystemFont(ofSize: 20)
@@ -45,23 +53,31 @@ class PopularMovieCarouselCell: UICollectionViewCell {
         config.imagePadding = 0
         config.baseForegroundColor = .white
         moreButton.configuration = config
-
     }
     
-    
-    func configure(with movies: Movie) {
-        self.movies = movies
-        let url = URL(string: "https://image.tmdb.org/t/p/w500\(movies.posterPath)")
-        URLSession.shared.dataTask(with: url!) { data, _, _ in
-            if let data = data {
-                DispatchQueue.main.async {
-                    self.carouselImageView.image = UIImage(data: data)
-                }
+    // MARK: -Fetching PosterImage
+    func configure(with movie: Movie) {
+        self.movie = movie
+        let posterPath = movie.posterPath
+        guard let url = URL(string: "https://image.tmdb.org/t/p/w500\(posterPath)") else {
+            carouselImageView.image = nil
+            return
+        }
+        dataTask?.cancel()
+        dataTask = URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
+            guard let self = self, let data = data, error == nil,
+                  let image = UIImage(data: data) else {
+                return
             }
-        }.resume()
+            DispatchQueue.main.async {
+                self.carouselImageView.image = image
+            }
+        }
+        dataTask?.resume()
     }
     
-    @IBAction func moreButtonAction(_ sender: Any) {
+    // MARK: - Action Method
+    @IBAction private func moreButtonAction(_ sender: Any) {
         delegate?.didTapMoreButton(from: self)
     }
 }

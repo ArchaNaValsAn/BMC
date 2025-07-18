@@ -8,53 +8,41 @@
 import UIKit
 
 class MovieDetailsViewController: UIViewController {
-    
+        
     @IBOutlet weak var baseView: UIView!
     @IBOutlet weak var cardStackView: UIStackView!
-    
-    
     @IBOutlet weak var posterImageView: UIImageView!
     @IBOutlet weak var movieTitleLabel: UILabel!
     @IBOutlet weak var favoriteButton: UIButton!
     @IBOutlet weak var releaseDateLabel: UILabel!
     @IBOutlet weak var overViewTextView: UITextView!
     @IBOutlet weak var ratingLabel: UILabel!
-    
+        
     var movie: Movie?
-//    var favoritedMovieIDs = Set<String>()
     private var isFavorited = false
-    
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         setupBlurBackground()
         setupCardStackView()
         setupDetails()
-        
-        baseView.accessibilityIdentifier = "baseView"
-        cardStackView.accessibilityIdentifier = "cardStackView"
-        posterImageView.accessibilityIdentifier = "posterImageView"
-        movieTitleLabel.accessibilityIdentifier = "movieTitleLabel"
-        favoriteButton.accessibilityIdentifier = "favoriteButton"
-        releaseDateLabel.accessibilityIdentifier = "releaseDateLabel"
-        overViewTextView.accessibilityIdentifier = "overViewTextView"
-        ratingLabel.accessibilityIdentifier = "ratingLabel"
+        setupAccessibilityIdentifiers()
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
+        self.presentingViewController?.navigationController?.setNavigationBarHidden(false, animated: false)
+
     }
     
-    
-    private func setupBlurBackground() {
+        private func setupBlurBackground() {
         let blurEffect = UIBlurEffect(style: .systemUltraThinMaterialDark)
         let blurView = UIVisualEffectView(effect: blurEffect)
         blurView.frame = view.bounds
         blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.insertSubview(blurView, at: 0)
-        
+
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissModal))
         blurView.addGestureRecognizer(tapGesture)
     }
@@ -76,38 +64,50 @@ class MovieDetailsViewController: UIViewController {
         guard let movie = movie else { return }
         posterImageView.loadImage(from: movie.posterPath)
         movieTitleLabel.text = movie.title
-        movieTitleLabel.textColor = .white
         releaseDateLabel.text = movie.releaseDate
-        releaseDateLabel.textColor = .white
         ratingLabel.text = "⭐️ \(movie.voteAverage)"
-        ratingLabel.textColor = .white
         overViewTextView.text = movie.overview
+        
+        movieTitleLabel.textColor = .white
+        releaseDateLabel.textColor = .white
+        ratingLabel.textColor = .white
         overViewTextView.textColor = .white
         overViewTextView.isEditable = false
         overViewTextView.isScrollEnabled = false
         overViewTextView.sizeToFit()
-        FavoriteMovieManager.shared.isFavorite(movieID: String(movie.id))
-        favoriteButton.updateFavoriteAppearance(isFavorited: isFavorited)
         
+        isFavorited = FavoriteMovieManager.shared.isFavorite(movieID: String(movie.id))
+        favoriteButton.updateFavoriteAppearance(isFavorited: isFavorited)
     }
     
+    private func setupAccessibilityIdentifiers() {
+        baseView.accessibilityIdentifier = "baseView"
+        cardStackView.accessibilityIdentifier = "cardStackView"
+        posterImageView.accessibilityIdentifier = "posterImageView"
+        movieTitleLabel.accessibilityIdentifier = "movieTitleLabel"
+        favoriteButton.accessibilityIdentifier = "favoriteButton"
+        releaseDateLabel.accessibilityIdentifier = "releaseDateLabel"
+        overViewTextView.accessibilityIdentifier = "overViewTextView"
+        ratingLabel.accessibilityIdentifier = "ratingLabel"
+    }
     
+    // MARK: - Action Methods
     @objc private func dismissModal() {
         dismiss(animated: true, completion: nil)
     }
     
-    
     @IBAction func favoriteButtonAction(_ sender: Any) {
+        guard let movie = movie else { return }
+        
+        let movieID = String(movie.id)
         isFavorited.toggle()
         favoriteButton.updateFavoriteAppearance(isFavorited: isFavorited)
-        guard let movie = movie else { return }
-        let movieID = String(movie.id)
-           if FavoriteMovieManager.shared.isFavorite(movieID: movieID) {
-               FavoriteMovieManager.shared.removeFromFavorites(movieID: movieID)
-           } else {
-               FavoriteMovieManager.shared.addToFavorites(movie: movie)
-           }
         
+        if FavoriteMovieManager.shared.isFavorite(movieID: movieID) {
+            FavoriteMovieManager.shared.removeFromFavorites(movieID: movieID)
+        } else {
+            FavoriteMovieManager.shared.addToFavorites(movie: movie)
+        }
+        dismiss(animated: true, completion: nil)
     }
-    
 }

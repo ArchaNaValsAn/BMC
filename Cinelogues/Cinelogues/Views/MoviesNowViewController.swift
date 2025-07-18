@@ -13,9 +13,11 @@ class MoviesNowViewController: UIViewController {
     @IBOutlet weak var movieSearchBar: UISearchBar!
     @IBOutlet weak var favoritesTabButton: UIButton!
     
-    var movies : [Movie] = []
+    var movies: [Movie] = []
     var filteredMovies: [Movie] = []
     var isSearching = false
+    
+    // MARK: - Lifecycle Methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,24 +25,24 @@ class MoviesNowViewController: UIViewController {
         setupSearchBar()
         NotificationCenter.default.addObserver(self, selector: #selector(favoritesUpdated(_:)), name: .favoritesUpdated, object: nil)
         
-        popularMoviesCV.accessibilityIdentifier = "popularMoviesCollectionView" 
+        popularMoviesCV.accessibilityIdentifier = "popularMoviesCollectionView"
         favoritesTabButton.accessibilityIdentifier = "favoritesTabButton"
         movieSearchBar.accessibilityIdentifier = "movieSearchBar"
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         if !movies.isEmpty {
             popularMoviesCV.setContentOffset(.zero, animated: false)
         }
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
     
     @objc private func favoritesUpdated(_ notification: Notification) {
-        guard let movieID = notification.object as? String else {
-            return
-        }
+        guard let movieID = notification.object as? String else { return }
         
         let currentMovies = isSearching ? filteredMovies : movies
         
@@ -56,13 +58,6 @@ class MoviesNowViewController: UIViewController {
         }
     }
     
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
-    
-    
     private func setupCollectionView() {
         let nib = UINib(nibName: "MoviesCollectionViewCell", bundle: nil)
         popularMoviesCV.register(nib, forCellWithReuseIdentifier: MoviesCollectionViewCell.identifier)
@@ -73,10 +68,9 @@ class MoviesNowViewController: UIViewController {
         favoritesTabButton.setImage(image, for: .normal)
         favoritesTabButton.tintColor = .systemRed
         
-        
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
-        let itemWidth = (view.frame.width - 12 * 3) / 2  // Two items per row with spacing
+        let itemWidth = (view.frame.width - 12 * 3) / 2
         layout.itemSize = CGSize(width: itemWidth, height: 200)
         layout.minimumLineSpacing = 8
         layout.minimumInteritemSpacing = 8
@@ -90,22 +84,21 @@ class MoviesNowViewController: UIViewController {
         movieSearchBar.backgroundImage = UIImage()
         
         if let textField = movieSearchBar.value(forKey: "searchField") as? UITextField {
-            textField.backgroundColor = UIColor.black
+            textField.backgroundColor = .black
             textField.textColor = .white
             textField.font = UIFont.systemFont(ofSize: 14)
             textField.attributedPlaceholder = NSAttributedString(
                 string: "Search here...",
-                attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray]
+                attributes: [.foregroundColor: UIColor.lightGray]
             )
             textField.layer.cornerRadius = 10
             textField.clipsToBounds = true
         }
         
         movieSearchBar.setImage(UIImage(systemName: "xmark.circle"), for: .clear, state: .normal)
-        
-        
-        
     }
+    
+    // MARK: - Search Handling
     
     func searchMovies(with searchText: String) {
         let trimmedText = searchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
@@ -139,23 +132,22 @@ class MoviesNowViewController: UIViewController {
             message: "No movies found for \"\(searchText)\".",
             preferredStyle: .alert
         )
-
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak self] _ in
+        
+        alert.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
             guard let self = self else { return }
             self.movieSearchBar.text = ""
             self.movieSearchBar.resignFirstResponder()
-            
             self.isSearching = false
             self.filteredMovies.removeAll()
             self.popularMoviesCV.reloadData()
-        }))
-
+        })
+        
         present(alert, animated: true)
     }
-
+    
+    // MARK: - Action Method
     
     @IBAction func favoriteButtonAction(_ sender: Any) {
-        
         let storyboard = UIStoryboard(name: "FavoritesViewController", bundle: nil)
         if let favoritesVC = storyboard.instantiateViewController(withIdentifier: "FavoritesViewController") as? FavoritesViewController {
             self.navigationController?.pushViewController(favoritesVC, animated: true)
@@ -163,7 +155,9 @@ class MoviesNowViewController: UIViewController {
     }
 }
 
-extension MoviesNowViewController : UICollectionViewDataSource, UICollectionViewDelegate {
+// MARK: - UICollectionViewDataSource & Delegate
+
+extension MoviesNowViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return isSearching ? filteredMovies.count : movies.count
@@ -174,9 +168,9 @@ extension MoviesNowViewController : UICollectionViewDataSource, UICollectionView
             fatalError("Unable to dequeue MoviesCollectionViewCell")
         }
         
-        let movie = movies[indexPath.item]
+        let movie = isSearching ? filteredMovies[indexPath.row] : movies[indexPath.row]
         let isFavorited = FavoriteMovieManager.shared.isFavorite(movieID: String(movie.id))
-        cell.configure(with: isSearching ? filteredMovies[indexPath.row] : movie, isFavorited: isFavorited)
+        cell.configure(with: movie, isFavorited: isFavorited)
         
         cell.favoriteButtonTapped = { [weak self] isNowFavorited in
             guard self != nil else { return }
@@ -198,14 +192,15 @@ extension MoviesNowViewController : UICollectionViewDataSource, UICollectionView
             self.definesPresentationContext = true
             navigationController?.setNavigationBarHidden(true, animated: false)
             detailsVC.movie = isSearching ? filteredMovies[indexPath.row] : movies[indexPath.row]
-            //detailsVC.favoritedMovieIDs = self.favoritedMovieIDs
-            present(detailsVC, animated: true, completion: nil)
+            present(detailsVC, animated: true)
         }
     }
-    
 }
 
+// MARK: - UISearchBarDelegate
+
 extension MoviesNowViewController: UISearchBarDelegate {
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         searchMovies(with: searchText)
     }
@@ -217,5 +212,4 @@ extension MoviesNowViewController: UISearchBarDelegate {
         popularMoviesCV.reloadData()
         searchBar.resignFirstResponder()
     }
-    
 }

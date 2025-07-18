@@ -7,15 +7,16 @@
 
 import Foundation
 
-import Foundation
-
 protocol MovieListViewModelDelegate: AnyObject {
-//    func didUpdateMovies(for category: MovieCategory, movies: [Movie])
     func didUpdateCombinedMovies(_ movies: [Movie])
+    func didUpdateCurrentIndex(to index: Int)
+    func didRequestScrollToIndex(_ index: Int)  // NEW
 }
+
 
 class MovieListViewModel {
     
+    // Pagination state per category
     private var currentPage: [MovieCategory: Int] = [
         .popular: 1,
         .nowPlaying: 1,
@@ -33,79 +34,108 @@ class MovieListViewModel {
     private(set) var upcomingMovies: [Movie] = []
     private(set) var allMovies: [Movie] = []
     
-    var onMoviesUpdated: ((MovieCategory) -> Void)?
-    var onError: ((MovieCategory, String) -> Void)?
-    
+    // Delegate
     weak var delegate: MovieListViewModelDelegate?
     
-//    func fetchMovies(for category: MovieCategory) {
-//        guard isFetching[category] == false else { return }
-//        
-//        isFetching[category] = true
-//        
-//        MovieListService.shared.fetchMovies(for: category, page: currentPage[category] ?? 1) { [weak self] result in
-//            guard let self = self else { return }
-//            
-//            DispatchQueue.main.async {
-//                self.isFetching[category] = false
-//                
-//                switch result {
-//                case .success(let newMovies):
-//                    switch category {
-//                    case .popular:
-//                        self.popularMovies += newMovies
-//                    case .nowPlaying:
-//                        self.nowPlayingMovies += newMovies
-//                    case .upcoming:
-//                        self.upcomingMovies += newMovies
-//                    }
-//                    
-//                    self.currentPage[category, default: 1] += 1
-//                    self.onMoviesUpdated?(category)
-//                    
-//                case .failure(let error):
-//                    self.onError?(category, error.localizedDescription)
-//                }
-//            }
-//        }
-//    }
+    // Timer and carousel control
+    private var autoScrollTimer: Timer?
+    private var currentCarouselIndex = 0
     
+    // To limit the carousel to top 5 movies
+    var topFiveMovies: [Movie] {
+        Array(allMovies.prefix(5))
+    }
+    
+    // Repeat movies many times to simulate infinite scroll
+    var repeatedMovies: [Movie] {
+        guard !topFiveMovies.isEmpty else { return [] }
+        return Array(repeating: topFiveMovies, count: 1000).flatMap { $0 }
+    }
+    
+    // Public accessors for view controller
+    
+    func itemCount() -> Int {
+        repeatedMovies.count
+    }
+    
+    func movie(at index: Int) -> Movie {
+        repeatedMovies[index]
+    }
+    
+    func currentIndex() -> Int {
+        currentCarouselIndex
+    }
+    
+    func resetCurrentIndex() {
+        currentCarouselIndex = (repeatedMovies.count / 2) - ((repeatedMovies.count / 2) % topFiveMovies.count)
+        delegate?.didUpdateCurrentIndex(to: currentCarouselIndex % topFiveMovies.count)
+    }
+    
+    func updateCurrentIndex(_ index: Int) {
+        currentCarouselIndex = index
+        delegate?.didUpdateCurrentIndex(to: currentCarouselIndex % topFiveMovies.count)
+    }
+    
+    // Fetch movies from service and notify VC
     func fetchAllCategories() {
-            let group = DispatchGroup()
-            var allMovies: [Movie] = []
-
-            let categories: [MovieCategory] = [.popular, .nowPlaying, .upcoming]
-
-            for category in categories {
-                group.enter()
-                MovieListService.shared.fetchMovies(for: category) { result in
-                    switch result {
-                    case .success(let movies):
-                        allMovies += movies
-                    case .failure(let error):
-                        print("Error fetching \(category): \(error)")
-                    }
-                    group.leave()
+        let group = DispatchGroup()
+        var combinedMovies: [Movie] = []
+        
+        let categories: [MovieCategory] = [.popular, .nowPlaying, .upcoming]
+        
+        for category in categories {
+            group.enter()
+            MovieListService.shared.fetchMovies(for: category) { [weak self] result in
+                defer { group.leave() }
+                switch result {
+                case .success(let movies):
+                    combinedMovies += movies
+                case .failure(let error):
+                    print("Error fetching \(category): \(error)")
                 }
             }
-
-            group.notify(queue: .main) {
-                self.allMovies = allMovies
-                self.delegate?.didUpdateCombinedMovies(allMovies)
-            }
         }
+        
+        group.notify(queue: .main) { [weak self] in
+            guard let self = self else { return }
+            self.allMovies = combinedMovies
+            self.delegate?.didUpdateCombinedMovies(combinedMovies)
+            self.resetCurrentIndex()
+            self.startAutoScroll()
+        }
+    }
     
-    func resetAndFetch(for category: MovieCategory) {
-        currentPage[category] = 1
-        isFetching[category] = false
-        
-        switch category {
-        case .popular: popularMovies = []
-        case .nowPlaying: nowPlayingMovies = []
-        case .upcoming: upcomingMovies = []
+    // Timer control
+    
+    func startAutoScroll() {
+        stopAutoScroll()
+        autoScrollTimer = Timer.scheduledTimer(timeInterval: 1.0,
+                                               target: self,
+                                               selector: #selector(autoScrollToNext),
+                                               userInfo: nil,
+                                               repeats: true)
+    }
+    
+    func stopAutoScroll() {
+        autoScrollTimer?.invalidate()
+        autoScrollTimer = nil
+    }
+    
+    @objc private func autoScrollToNext() {
+        guard !repeatedMovies.isEmpty else { return }
+        currentCarouselIndex += 1
+
+        if currentCarouselIndex >= repeatedMovies.count - topFiveMovies.count {
+            resetCurrentIndex()
         }
         
-        fetchAllCategories()
+        delegate?.didRequestScrollToIndex(currentCarouselIndex)
+        delegate?.didUpdateCurrentIndex(to: currentCarouselIndex % topFiveMovies.count)
+    }
+
+    
+    deinit {
+        stopAutoScroll()
     }
 }
 

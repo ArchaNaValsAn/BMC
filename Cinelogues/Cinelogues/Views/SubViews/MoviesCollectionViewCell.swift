@@ -23,24 +23,19 @@ class MoviesCollectionViewCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        updateUIElements()
-        
-        posterImageView.accessibilityIdentifier = "posterImageView"
-        movieTitleLabel.accessibilityIdentifier = "movieTitleLabel"
-        averageRatingLabel.accessibilityIdentifier = "averageRatingLabel"
-        favoriteButton.accessibilityIdentifier = "favoriteButton"
-        
+        setupUI()
+        setupAccessibilityIdentifiers()
     }
     
     func configure(with movie: Movie, isFavorited: Bool) {
-        self.isFavorited = isFavorited
         self.movie = movie
+        self.isFavorited = isFavorited
+        
         movieTitleLabel.text = movie.title
         averageRatingLabel.text = "⭐️ \(movie.voteAverage)"
-        
         posterImageView.loadImage(from: movie.posterPath)
-        favoriteButton.updateFavoriteAppearance(isFavorited: isFavorited)
         
+        favoriteButton.updateFavoriteAppearance(isFavorited: isFavorited)
     }
     
     func updateFavoriteState(isFavorited: Bool) {
@@ -48,13 +43,21 @@ class MoviesCollectionViewCell: UICollectionViewCell {
         favoriteButton.updateFavoriteAppearance(isFavorited: isFavorited)
     }
     
-    private func updateUIElements() {
+    private func setupUI() {
         movieTitleLabel.textColor = .white
         averageRatingLabel.textColor = .white
-        
     }
     
-    @IBAction func favoriteButtonAction(_ sender: Any) {
+    private func setupAccessibilityIdentifiers() {
+        posterImageView.accessibilityIdentifier = "posterImageView"
+        movieTitleLabel.accessibilityIdentifier = "movieTitleLabel"
+        averageRatingLabel.accessibilityIdentifier = "averageRatingLabel"
+        favoriteButton.accessibilityIdentifier = "favoriteButton"
+    }
+    
+    // MARK: - Action Method
+    
+    @IBAction func favoriteButtonAction(_ sender: UIButton) {
         isFavorited.toggle()
         favoriteButton.updateFavoriteAppearance(isFavorited: isFavorited)
         
@@ -66,9 +69,8 @@ class MoviesCollectionViewCell: UICollectionViewCell {
         } else {
             FavoriteMovieManager.shared.removeFromFavorites(movieID: movieID)
         }
-        NotificationCenter.default.post(name: .favoritesUpdated, object: movieID)
         
+        NotificationCenter.default.post(name: .favoritesUpdated, object: movieID)
         favoriteButtonTapped?(isFavorited)
     }
-    
 }
