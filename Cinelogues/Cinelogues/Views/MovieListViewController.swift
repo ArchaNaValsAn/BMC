@@ -24,7 +24,7 @@ class MovieListViewController: UIViewController {
         super.viewDidLoad()
         viewModel.delegate = self
         viewModel.fetchAllCategories()
-        viewModel.fetchMovies(for: category)
+        //viewModel.fetchMovies(for: category)
         setupCarouselView()
         setupPageControl()
         
@@ -81,7 +81,6 @@ extension MovieListViewController: UICollectionViewDelegate, UICollectionViewDat
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PopularMovieCarouselCell.identifier,for: indexPath) as! PopularMovieCarouselCell
-        let topFiveMovies = Array(movies.prefix(5))
         cell.configure(with: movies[indexPath.item])
         cell.delegate = self
         return cell
@@ -134,6 +133,8 @@ extension MovieListViewController: PopularMovieCarouselCellDelegate {
     func didTapMoreButton(from cell: PopularMovieCarouselCell) {
         let storyboard = UIStoryboard(name: "MoviesNowViewController", bundle: nil)
         if let moviesNowVC = storyboard.instantiateViewController(withIdentifier: "MoviesNowViewController") as? MoviesNowViewController {
+           // moviesNowVC.viewModel = self.viewModel
+            moviesNowVC.movies = self.movies
             self.navigationController?.pushViewController(moviesNowVC, animated: true)
         }
 
