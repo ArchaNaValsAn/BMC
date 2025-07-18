@@ -5,13 +5,6 @@
 //  Created by AJ on 19/07/25.
 //
 
-//
-//  FavoriteMovieManager.swift
-//  Cinelogues
-//
-//  Created by AJ on 19/07/25.
-//
-
 import Foundation
 import CoreData
 import UIKit

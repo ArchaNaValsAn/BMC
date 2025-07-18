@@ -8,7 +8,7 @@
 import UIKit
 
 class MoviesCollectionViewCell: UICollectionViewCell {
-
+    
     static let identifier = "MoviesCollectionViewCell"
     
     @IBOutlet weak var posterImageView: UIImageView!
@@ -24,7 +24,7 @@ class MoviesCollectionViewCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         updateUIElements()
-      
+        
     }
     
     func configure(with movie: Movie, isFavorited: Bool) {
@@ -38,6 +38,11 @@ class MoviesCollectionViewCell: UICollectionViewCell {
         
     }
     
+    func updateFavoriteState(isFavorited: Bool) {
+        self.isFavorited = isFavorited
+        favoriteButton.updateFavoriteAppearance(isFavorited: isFavorited)
+    }
+    
     private func updateUIElements() {
         movieTitleLabel.textColor = .white
         averageRatingLabel.textColor = .white
@@ -47,14 +52,18 @@ class MoviesCollectionViewCell: UICollectionViewCell {
     @IBAction func favoriteButtonAction(_ sender: Any) {
         isFavorited.toggle()
         favoriteButton.updateFavoriteAppearance(isFavorited: isFavorited)
-        favoriteButtonTapped?(isFavorited)
+        
         guard let movie = movie else { return }
         let movieID = String(movie.id)
-           if FavoriteMovieManager.shared.isFavorite(movieID: movieID) {
-               FavoriteMovieManager.shared.removeFromFavorites(movieID: movieID)
-           } else {
-               FavoriteMovieManager.shared.addToFavorites(movie: movie)
-           }
+        
+        if isFavorited {
+            FavoriteMovieManager.shared.addToFavorites(movie: movie)
+        } else {
+            FavoriteMovieManager.shared.removeFromFavorites(movieID: movieID)
+        }
+        NotificationCenter.default.post(name: .favoritesUpdated, object: movieID)
+        
+        favoriteButtonTapped?(isFavorited)
     }
     
 }

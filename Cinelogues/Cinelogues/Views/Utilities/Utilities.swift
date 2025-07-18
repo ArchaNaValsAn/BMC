@@ -18,25 +18,41 @@ extension UIButton {
 
 
 extension UIImageView {
-    func loadImage(from path: String?, placeholder: UIImage? = nil) {
-        guard let path = path else {
-            self.image = placeholder
+    func loadImage(from urlString: String?) {
+        guard let urlString = urlString,
+              let url = URL(string: "https://image.tmdb.org/t/p/w500\(urlString)") else {
+            self.image = UIImage(named: "placeholder") // fallback image
             return
         }
-        let urlString = "https://image.tmdb.org/t/p/w500\(path)"
-        guard let url = URL(string: urlString) else {
-            self.image = placeholder
-            return
-        }
-        self.image = placeholder
 
+        // ✅ Use URLCache or custom in-memory cache here
+        if let cachedImage = ImageCache.shared.image(forKey: urlString) {
+            self.image = cachedImage
+            return
+        }
+
+        // async load
         URLSession.shared.dataTask(with: url) { data, _, _ in
-            if let data = data {
+            if let data = data, let image = UIImage(data: data) {
+                ImageCache.shared.setImage(image, forKey: urlString)
                 DispatchQueue.main.async {
-                    self.image = UIImage(data: data)
+                    self.image = image
                 }
             }
         }.resume()
+    }
+}
+
+class ImageCache {
+    static let shared = ImageCache()
+    private let cache = NSCache<NSString, UIImage>()
+
+    func image(forKey key: String) -> UIImage? {
+        return cache.object(forKey: NSString(string: key))
+    }
+
+    func setImage(_ image: UIImage, forKey key: String) {
+        cache.setObject(image, forKey: NSString(string: key))
     }
 }
 

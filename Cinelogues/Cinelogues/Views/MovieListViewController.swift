@@ -34,9 +34,14 @@ class MovieListViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        if !hasScrolledToInitialIndex, movies.count > 0 {
-            popularMovieCarouselCell.scrollToItem(at: IndexPath(item: 0, section: 0), at: .centeredHorizontally, animated: false)
-            hasScrolledToInitialIndex = true
+        
+        if !hasScrolledToInitialIndex, topFiveMovies.count > 0 {
+            DispatchQueue.main.async {
+                if self.topFiveMovies.count > 0 {
+                    self.popularMovieCarouselCell.scrollToItem(at: IndexPath(item: 0, section: 0), at: .centeredHorizontally, animated: false)
+                    self.hasScrolledToInitialIndex = true
+                }
+            }
         }
     }
 

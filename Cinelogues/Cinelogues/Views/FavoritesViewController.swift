@@ -17,7 +17,17 @@ class FavoritesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCollectionView()
+        NotificationCenter.default.addObserver(self, selector: #selector(favoritesUpdated(_:)), name: .favoritesUpdated, object: nil)
+    }
+    
+    @objc private func favoritesUpdated(_ notification: Notification) {
+        let entities = FavoriteMovieManager.shared.fetchAllFavorites()
+        favoriteMovies = entities.compactMap { Movie(from: $0) }
+        favoritesCollectionView.reloadData()
+    }
 
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     
