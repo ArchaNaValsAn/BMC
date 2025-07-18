@@ -142,6 +142,10 @@ extension MovieListViewController: UIScrollViewDelegate {
 
 // MARK: - MovieListViewModelDelegate
 extension MovieListViewController: MovieListViewModelDelegate {
+    func didFailToLoadMovies() {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
     func didUpdateCombinedMovies(_ movies: [Movie]) {
         DispatchQueue.main.async {
             self.popularMovieCarouselCell.reloadData()
