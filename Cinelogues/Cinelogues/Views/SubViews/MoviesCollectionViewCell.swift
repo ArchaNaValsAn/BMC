@@ -34,18 +34,9 @@ class MoviesCollectionViewCell: UICollectionViewCell {
         releaseYearLabel.text = movie.releaseDate
         averageRatingLabel.text = "⭐️ \(movie.voteAverage)"
             
-            if let url = URL(string: "https://image.tmdb.org/t/p/w500\(movie.posterPath)") {
-                // Load image async (simple)
-                URLSession.shared.dataTask(with: url) { data, _, _ in
-                    if let data = data {
-                        DispatchQueue.main.async {
-                            self.posterImageView.image = UIImage(data: data)
-                        }
-                    }
-                }.resume()
-            }
-            
-            updateFavoriteButton()
+        posterImageView.loadImage(from: movie.posterPath)
+        favoriteButton.updateFavoriteAppearance(isFavorited: isFavorited)
+        
         }
     
     private func updateUIElements() {
@@ -55,15 +46,15 @@ class MoviesCollectionViewCell: UICollectionViewCell {
         
     }
     
-    private func updateFavoriteButton() {
-           let imageName = isFavorited ? "heart.fill" : "heart"
-           favoriteButton.setImage(UIImage(systemName: imageName), for: .normal)
-           favoriteButton.tintColor = isFavorited ? .systemRed : .lightGray
-       }
+//    private func updateFavoriteButton() {
+//           let imageName = isFavorited ? "heart.fill" : "heart"
+//           favoriteButton.setImage(UIImage(systemName: imageName), for: .normal)
+//           favoriteButton.tintColor = isFavorited ? .systemRed : .lightGray
+//       }
     
     @IBAction func favoriteButtonAction(_ sender: Any) {
         isFavorited.toggle()
-        updateFavoriteButton()
+        favoriteButton.updateFavoriteAppearance(isFavorited: isFavorited)
         favoriteButtonTapped?(isFavorited)
     }
     

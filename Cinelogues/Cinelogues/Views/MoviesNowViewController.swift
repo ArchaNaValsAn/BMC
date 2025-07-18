@@ -130,6 +130,19 @@ extension MoviesNowViewController : UICollectionViewDataSource, UICollectionView
 
            return cell
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let storyboard = UIStoryboard(name: "MovieDetailsViewController", bundle: nil)
+        if let detailsVC = storyboard.instantiateViewController(withIdentifier: "MovieDetailsViewController") as? MovieDetailsViewController {
+            detailsVC.modalPresentationStyle = .overCurrentContext
+            detailsVC.modalTransitionStyle = .crossDissolve
+            self.definesPresentationContext = true
+            navigationController?.setNavigationBarHidden(true, animated: false)
+            detailsVC.movie = isSearching ? filteredMovies[indexPath.row] : movies[indexPath.row]
+            detailsVC.favoritedMovieIDs = self.favoritedMovieIDs
+            present(detailsVC, animated: true, completion: nil)
+        }
+    }
 
 }
 

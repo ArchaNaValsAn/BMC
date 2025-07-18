@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Movie Details View Controller-->
+        <scene sceneID="s0d-6b-0kx">
+            <objects>
+                <viewController storyboardIdentifier="MovieDetailsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Y6W-OH-hqX" customClass="MovieDetailsViewController" customModule="Cinelogues" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" ambiguous="YES" id="5EZ-qb-Rvc">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Iu-fn-LAg">
+                                <rect key="frame" x="28" y="126" width="337" height="500"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Nk5-K7-KEw">
+                                        <rect key="frame" x="0.0" y="0.0" width="337" height="500"/>
+                                        <subviews>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="R42-tP-NLN">
+                                                <rect key="frame" x="0.0" y="0.0" width="337" height="288.33333333333331"/>
+                                            </imageView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="G5C-Cs-1TJ">
+                                                <rect key="frame" x="137" y="296.33333333333331" width="63" height="14"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AOc-SL-cdw">
+                                                        <rect key="frame" x="0.0" y="0.0" width="31" height="14"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UbS-xS-T32">
+                                                        <rect key="frame" x="39" y="0.0" width="24" height="14"/>
+                                                        <state key="normal" title="Button"/>
+                                                        <buttonConfiguration key="configuration" style="plain"/>
+                                                        <connections>
+                                                            <action selector="favoriteButtonAction:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="9gw-it-p6q"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                            </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="9Ja-zo-oao">
+                                                <rect key="frame" x="133.66666666666666" y="318.33333333333331" width="70" height="14.333333333333314"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w9P-c6-81r">
+                                                        <rect key="frame" x="0.0" y="0.0" width="31" height="14.333333333333334"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sn0-hK-iVz">
+                                                        <rect key="frame" x="39" y="0.0" width="31" height="14.333333333333334"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                            </stackView>
+                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" textAlignment="justified" translatesAutoresizingMaskIntoConstraints="NO" id="hdQ-ni-EaB">
+                                                <rect key="frame" x="0.0" y="340.66666666666669" width="337" height="159.33333333333331"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                                <color key="textColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                            </textView>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="Nk5-K7-KEw" firstAttribute="centerY" secondItem="0Iu-fn-LAg" secondAttribute="centerY" id="9DI-zS-GA6"/>
+                                    <constraint firstAttribute="height" constant="500" id="RSv-YF-Hd6"/>
+                                    <constraint firstItem="Nk5-K7-KEw" firstAttribute="centerX" secondItem="0Iu-fn-LAg" secondAttribute="centerX" id="Vf3-B5-dCJ"/>
+                                    <constraint firstItem="Nk5-K7-KEw" firstAttribute="leading" secondItem="0Iu-fn-LAg" secondAttribute="leading" id="hsM-h5-3Rh"/>
+                                    <constraint firstItem="Nk5-K7-KEw" firstAttribute="top" secondItem="0Iu-fn-LAg" secondAttribute="top" id="u8l-up-sNw"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="0Iu-fn-LAg" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="RAN-Dl-QCa"/>
+                            <constraint firstItem="0Iu-fn-LAg" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" constant="8" id="VEz-iY-qg3"/>
+                            <constraint firstItem="0Iu-fn-LAg" firstAttribute="centerY" secondItem="5EZ-qb-Rvc" secondAttribute="centerY" id="hsO-qI-Wmo"/>
+                            <constraint firstItem="0Iu-fn-LAg" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="28" id="pkV-wl-CSR"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="baseView" destination="0Iu-fn-LAg" id="5KR-K5-bWD"/>
+                        <outlet property="cardStackView" destination="Nk5-K7-KEw" id="FJ5-Za-pZV"/>
+                        <outlet property="favoriteButton" destination="UbS-xS-T32" id="UOG-A5-f1Y"/>
+                        <outlet property="movieTitleLabel" destination="AOc-SL-cdw" id="yvp-JN-suB"/>
+                        <outlet property="overViewTextView" destination="hdQ-ni-EaB" id="KZB-o9-e5d"/>
+                        <outlet property="posterImageView" destination="R42-tP-NLN" id="9mF-Bb-fIB"/>
+                        <outlet property="ratingLabel" destination="Sn0-hK-iVz" id="ZSf-QN-RDT"/>
+                        <outlet property="releaseDateLabel" destination="w9P-c6-81r" id="Gz3-cj-l3N"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-5.343511450381679" y="-66.197183098591552"/>
+        </scene>
+    </scenes>
+</document>
