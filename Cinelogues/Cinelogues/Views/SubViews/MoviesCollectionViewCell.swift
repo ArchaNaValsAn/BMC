@@ -17,7 +17,7 @@ class MoviesCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var favoriteButton: UIButton!
     
     private var isFavorited = false
-    private var movies: [Movie] = []
+    private var movie: Movie?
     
     var favoriteButtonTapped: ((Bool) -> Void)?
     
@@ -28,15 +28,15 @@ class MoviesCollectionViewCell: UICollectionViewCell {
     }
     
     func configure(with movie: Movie, isFavorited: Bool) {
-            self.isFavorited = isFavorited
+        self.isFavorited = isFavorited
+        self.movie = movie
         movieTitleLabel.text = movie.title
-        //releaseYearLabel.text = movie.releaseDate
         averageRatingLabel.text = "⭐️ \(movie.voteAverage)"
-            
+        
         posterImageView.loadImage(from: movie.posterPath)
         favoriteButton.updateFavoriteAppearance(isFavorited: isFavorited)
         
-        }
+    }
     
     private func updateUIElements() {
         movieTitleLabel.textColor = .white
@@ -48,6 +48,13 @@ class MoviesCollectionViewCell: UICollectionViewCell {
         isFavorited.toggle()
         favoriteButton.updateFavoriteAppearance(isFavorited: isFavorited)
         favoriteButtonTapped?(isFavorited)
+        guard let movie = movie else { return }
+        let movieID = String(movie.id)
+           if FavoriteMovieManager.shared.isFavorite(movieID: movieID) {
+               FavoriteMovieManager.shared.removeFromFavorites(movieID: movieID)
+           } else {
+               FavoriteMovieManager.shared.addToFavorites(movie: movie)
+           }
     }
     
 }

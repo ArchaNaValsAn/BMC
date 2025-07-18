@@ -10,15 +10,13 @@ import UIKit
 class MoviesNowViewController: UIViewController {
     
     @IBOutlet weak var popularMoviesCV: UICollectionView!
-    @IBOutlet weak var movieSearchBar: UISearchBar!    
+    @IBOutlet weak var movieSearchBar: UISearchBar!
     @IBOutlet weak var favoritesTabButton: UIButton!
     
     var movies : [Movie] = []
     var filteredMovies: [Movie] = []
     var isSearching = false
-    
-    var favoritedMovieIDs = Set<String>()
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCollectionView()
@@ -109,14 +107,8 @@ class MoviesNowViewController: UIViewController {
         
         let storyboard = UIStoryboard(name: "FavoritesViewController", bundle: nil)
         if let favoritesVC = storyboard.instantiateViewController(withIdentifier: "FavoritesViewController") as? FavoritesViewController {
-            // moviesNowVC.viewModel = self.viewModel
-            //            moviesNowVC.movies = self.movies
             self.navigationController?.pushViewController(favoritesVC, animated: true)
         }
-        
-        
-        
-        
     }
 }
 
@@ -132,16 +124,16 @@ extension MoviesNowViewController : UICollectionViewDataSource, UICollectionView
            }
 
            let movie = movies[indexPath.item]
-           let isFavorited = favoritedMovieIDs.contains("\(movie.id)")
+        let isFavorited = FavoriteMovieManager.shared.isFavorite(movieID: String(movie.id))
             cell.configure(with: isSearching ? filteredMovies[indexPath.row] : movie, isFavorited: isFavorited)
 
            cell.favoriteButtonTapped = { [weak self] isNowFavorited in
                guard let self = self else { return }
                if isNowFavorited {
-                   self.favoritedMovieIDs.insert("\(movie.id)")
-               } else {
-                   self.favoritedMovieIDs.remove("\(movie.id)")
-               }
+                       FavoriteMovieManager.shared.addToFavorites(movie: movie)
+                   } else {
+                       FavoriteMovieManager.shared.removeFromFavorites(movieID: String(movie.id))
+                   }
            }
 
            return cell
@@ -155,7 +147,7 @@ extension MoviesNowViewController : UICollectionViewDataSource, UICollectionView
             self.definesPresentationContext = true
             navigationController?.setNavigationBarHidden(true, animated: false)
             detailsVC.movie = isSearching ? filteredMovies[indexPath.row] : movies[indexPath.row]
-            detailsVC.favoritedMovieIDs = self.favoritedMovieIDs
+            //detailsVC.favoritedMovieIDs = self.favoritedMovieIDs
             present(detailsVC, animated: true, completion: nil)
         }
     }

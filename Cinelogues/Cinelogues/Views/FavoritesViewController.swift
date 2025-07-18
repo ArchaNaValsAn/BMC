@@ -12,18 +12,26 @@ class FavoritesViewController: UIViewController {
     
     @IBOutlet weak var favoritesCollectionView: UICollectionView!
     
-   // var favoriteMovies: [FavoriteMovies] = []
-    
+    private var favoriteMovies: [Movie] = []
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCollectionView()
+
     }
     
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-      //  favoriteMovies = CoreDataManager.shared.fetchFavorites()
+        let entities = FavoriteMovieManager.shared.fetchAllFavorites()
+        favoriteMovies = entities.compactMap { Movie(from: $0) }
         favoritesCollectionView.reloadData()
+    }
+    
+    @objc private func refreshFavorites() {
+        let favorites = FavoriteMovieManager.shared.fetchAllFavorites()
+            favoriteMovies = favorites.compactMap { Movie(from: $0) }
+            favoritesCollectionView.reloadData()
     }
     
     private func setupCollectionView() {
@@ -31,8 +39,7 @@ class FavoritesViewController: UIViewController {
         favoritesCollectionView.register(nib, forCellWithReuseIdentifier: MoviesCollectionViewCell.identifier)
         favoritesCollectionView.delegate = self
         favoritesCollectionView.dataSource = self
-        
-        
+    
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         let itemWidth = (view.frame.width - 12 * 3) / 2  // Two items per row with spacing
@@ -44,23 +51,37 @@ class FavoritesViewController: UIViewController {
         favoritesCollectionView.collectionViewLayout = layout
     }
     
-    
-    
 }
 
 extension FavoritesViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 0
+        return favoriteMovies.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MoviesCollectionViewCell.identifier, for: indexPath) as? MoviesCollectionViewCell else {
-               fatalError("Unable to dequeue MoviesCollectionViewCell")
-           }
-
-//        let isFavorited = CoreDataManager.shared.isFavorited(id: "\(String(describing: favoriteMovies[indexPath.row].id))")
-       // cell.configure(with: favoriteMovies[indexPath.row], isFavorited: isFavorited)
-
-           return cell
+       
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: MoviesCollectionViewCell.identifier,
+            for: indexPath
+        ) as? MoviesCollectionViewCell else {
+            fatalError("Unable to dequeue MoviesCollectionViewCell")
+        }
+        
+        let movie = favoriteMovies[indexPath.item]
+        cell.configure(with: movie, isFavorited: true)
+        return cell
+        
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let storyboard = UIStoryboard(name: "MovieDetailsViewController", bundle: nil)
+        if let detailsVC = storyboard.instantiateViewController(withIdentifier: "MovieDetailsViewController") as? MovieDetailsViewController {
+            detailsVC.modalPresentationStyle = .overCurrentContext
+            detailsVC.modalTransitionStyle = .crossDissolve
+            self.definesPresentationContext = true
+            navigationController?.setNavigationBarHidden(true, animated: false)
+            detailsVC.movie = favoriteMovies[indexPath.row]
+            present(detailsVC, animated: true, completion: nil)
+        }
     }
 }

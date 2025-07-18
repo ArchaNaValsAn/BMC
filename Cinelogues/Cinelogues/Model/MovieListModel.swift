@@ -46,4 +46,38 @@ struct Movie: Codable {
     }
 }
 
+import Foundation
+
+extension Movie {
+    init?(from entity: FavoriteMoviesEntity) {
+        guard let idString = entity.id,
+              let id = Int(idString),
+              let title = entity.title,
+              let overview = entity.overview,
+              let posterPath = entity.posterPath,
+              let backdropPath = entity.backdropPath,
+              let releaseDate = entity.releaseDate,
+              let originalLanguage = entity.originalLanguage else {
+            return nil
+        }
+
+        let genreIDs = entity.genreIDS?
+            .split(separator: ",")
+            .compactMap { Int($0) } ?? []
+
+        self.init(
+            id: id,
+            title: title,
+            overview: overview,
+            posterPath: posterPath,
+            backdropPath: backdropPath,
+            releaseDate: releaseDate,
+            voteAverage: entity.voteAverage,
+            genreIDS: genreIDs,
+            originalLanguage: originalLanguage
+        )
+    }
+}
+
+
 

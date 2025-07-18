@@ -16,13 +16,12 @@ class MovieDetailsViewController: UIViewController {
     @IBOutlet weak var posterImageView: UIImageView!
     @IBOutlet weak var movieTitleLabel: UILabel!
     @IBOutlet weak var favoriteButton: UIButton!
-    @IBOutlet weak var genreLabel: UILabel!
     @IBOutlet weak var releaseDateLabel: UILabel!
     @IBOutlet weak var overViewTextView: UITextView!
     @IBOutlet weak var ratingLabel: UILabel!
     
     var movie: Movie?
-    var favoritedMovieIDs = Set<String>()
+//    var favoritedMovieIDs = Set<String>()
     private var isFavorited = false
     
     
@@ -77,7 +76,7 @@ class MovieDetailsViewController: UIViewController {
         overViewTextView.isEditable = false
         overViewTextView.isScrollEnabled = false
         overViewTextView.sizeToFit()
-        isFavorited = favoritedMovieIDs.contains("\(movie.id)")
+        FavoriteMovieManager.shared.isFavorite(movieID: String(movie.id))
         favoriteButton.updateFavoriteAppearance(isFavorited: isFavorited)
         
     }
@@ -91,6 +90,13 @@ class MovieDetailsViewController: UIViewController {
     @IBAction func favoriteButtonAction(_ sender: Any) {
         isFavorited.toggle()
         favoriteButton.updateFavoriteAppearance(isFavorited: isFavorited)
+        guard let movie = movie else { return }
+        let movieID = String(movie.id)
+           if FavoriteMovieManager.shared.isFavorite(movieID: movieID) {
+               FavoriteMovieManager.shared.removeFromFavorites(movieID: movieID)
+           } else {
+               FavoriteMovieManager.shared.addToFavorites(movie: movie)
+           }
         
     }
     

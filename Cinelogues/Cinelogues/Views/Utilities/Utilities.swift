@@ -12,6 +12,7 @@ extension UIButton {
         let imageName = isFavorited ? "heart.fill" : "heart"
         setImage(UIImage(systemName: imageName), for: .normal)
         tintColor = isFavorited ? .systemRed : .lightGray
+      
     }
 }
 

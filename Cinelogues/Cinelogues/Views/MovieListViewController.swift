@@ -133,7 +133,6 @@ extension MovieListViewController: PopularMovieCarouselCellDelegate {
     func didTapMoreButton(from cell: PopularMovieCarouselCell) {
         let storyboard = UIStoryboard(name: "MoviesNowViewController", bundle: nil)
         if let moviesNowVC = storyboard.instantiateViewController(withIdentifier: "MoviesNowViewController") as? MoviesNowViewController {
-           // moviesNowVC.viewModel = self.viewModel
             moviesNowVC.movies = self.movies
             self.navigationController?.pushViewController(moviesNowVC, animated: true)
         }
