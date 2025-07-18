@@ -20,13 +20,23 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="200"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     </imageView>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q6F-pu-cRI">
+                        <rect key="frame" x="318" y="165.66666666666666" width="75" height="34.333333333333343"/>
+                        <state key="normal" title="Button"/>
+                        <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                    </button>
                 </subviews>
             </view>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <rect key="contentStretch" x="0.0" y="0.0" width="0.0" height="1"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="q6F-pu-cRI" secondAttribute="bottom" id="9n5-op-oPV"/>
+                <constraint firstAttribute="trailing" secondItem="q6F-pu-cRI" secondAttribute="trailing" id="oJg-wo-AZg"/>
+            </constraints>
             <size key="customSize" width="111" height="50"/>
             <connections>
                 <outlet property="carouselImageView" destination="2fa-q7-TMb" id="GZc-rp-6th"/>
+                <outlet property="moreButton" destination="q6F-pu-cRI" id="6qk-w8-WG4"/>
             </connections>
             <point key="canvasLocation" x="87.786259541984734" y="-65.492957746478879"/>
         </collectionViewCell>

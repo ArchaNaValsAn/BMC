@@ -11,6 +11,7 @@ class MovieListViewController: UIViewController {
     
     @IBOutlet weak var mainStackView: UIStackView!
     
+    @IBOutlet weak var moreButton: UIButton!
     @IBOutlet weak var popularMovieCarouselCell: UICollectionView!
     
     private let viewModel = MovieListViewModel()
@@ -18,6 +19,7 @@ class MovieListViewController: UIViewController {
     private var category: MovieCategory = .popular
     private var hasScrolledToInitialIndex = false
     private let pageControl = UIPageControl()
+    private var topFiveMovies: [Movie] = []
     
     
     override func viewDidLoad() {
@@ -27,6 +29,7 @@ class MovieListViewController: UIViewController {
         viewModel.fetchMovies(for: category)
         setupCarouselView()
         setupPageControl()
+        
     }
     
    
@@ -68,19 +71,24 @@ class MovieListViewController: UIViewController {
             pageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
     }
-
+    
+    @IBAction func moreButtonAction(_ sender: Any) {
+        
+    }
     
 }
 
 extension MovieListViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    
+  
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return movies.count
+        return topFiveMovies.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PopularMovieCarouselCell.identifier,
-                                                      for: indexPath) as! PopularMovieCarouselCell
-        let movie = movies[indexPath.item]
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PopularMovieCarouselCell.identifier,for: indexPath) as! PopularMovieCarouselCell
+        let topFiveMovies = Array(movies.prefix(5))
+        let movie = topFiveMovies[indexPath.item]
         cell.configure(with: movie.posterPath)
         return cell
     }
@@ -118,9 +126,11 @@ extension MovieListViewController: MovieListViewModelDelegate {
     func didUpdateCombinedMovies(_ movies: [Movie]) {
         self.movies = movies
         
+        self.topFiveMovies = Array(movies.prefix(5))
+        
         DispatchQueue.main.async {
             self.popularMovieCarouselCell.reloadData()
-            self.pageControl.numberOfPages = movies.count
+            self.pageControl.numberOfPages = self.topFiveMovies.count
             self.pageControl.currentPage = 0
         }
     }
