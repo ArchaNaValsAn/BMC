@@ -62,7 +62,6 @@ class MovieListViewModel {
                     
                     self.currentPage[category, default: 1] += 1
                     self.onMoviesUpdated?(category)
-                   // self.delegate?.didUpdateMovies(for: category, movies: newMovies)
                     
                 case .failure(let error):
                     self.onError?(category, error.localizedDescription)

@@ -7,10 +7,19 @@
 
 import UIKit
 
+protocol PopularMovieCarouselCellDelegate: AnyObject {
+    func didTapMoreButton(from cell: PopularMovieCarouselCell)
+}
+
 class PopularMovieCarouselCell: UICollectionViewCell {
     
     @IBOutlet weak var carouselImageView: UIImageView!
+    
     static let identifier = "PopularMovieCarouselCell"
+    weak var delegate: PopularMovieCarouselCellDelegate?
+
+    
+    private var movies: Movie?
     
     @IBOutlet weak var moreButton: UIButton!
     override func awakeFromNib() {
@@ -38,9 +47,9 @@ class PopularMovieCarouselCell: UICollectionViewCell {
     }
     
     
-    func configure(with posterPath: String) {
-        let url = URL(string: "https://image.tmdb.org/t/p/w500\(posterPath)")
-        // Load image (use Kingfisher or URLSession)
+    func configure(with movies: Movie) {
+        self.movies = movies
+        let url = URL(string: "https://image.tmdb.org/t/p/w500\(movies.posterPath)")
         URLSession.shared.dataTask(with: url!) { data, _, _ in
             if let data = data {
                 DispatchQueue.main.async {
@@ -51,6 +60,6 @@ class PopularMovieCarouselCell: UICollectionViewCell {
     }
     
     @IBAction func moreButtonAction(_ sender: Any) {
-        
+        delegate?.didTapMoreButton(from: self)
     }
 }

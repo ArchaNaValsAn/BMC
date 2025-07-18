@@ -9,9 +9,7 @@ import UIKit
 
 class MovieListViewController: UIViewController {
     
-    @IBOutlet weak var mainStackView: UIStackView!
     
-    @IBOutlet weak var moreButton: UIButton!
     @IBOutlet weak var popularMovieCarouselCell: UICollectionView!
     
     private let viewModel = MovieListViewModel()
@@ -55,7 +53,7 @@ class MovieListViewController: UIViewController {
         
         popularMovieCarouselCell.decelerationRate = .fast
         popularMovieCarouselCell.showsHorizontalScrollIndicator = false
-        popularMovieCarouselCell.isPagingEnabled = false // paging handled by layout's targetContentOffset
+        popularMovieCarouselCell.isPagingEnabled = false
     }
     
     private func setupPageControl() {
@@ -72,10 +70,6 @@ class MovieListViewController: UIViewController {
         ])
     }
     
-    @IBAction func moreButtonAction(_ sender: Any) {
-        
-    }
-    
 }
 
 extension MovieListViewController: UICollectionViewDelegate, UICollectionViewDataSource {
@@ -88,8 +82,8 @@ extension MovieListViewController: UICollectionViewDelegate, UICollectionViewDat
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PopularMovieCarouselCell.identifier,for: indexPath) as! PopularMovieCarouselCell
         let topFiveMovies = Array(movies.prefix(5))
-        let movie = topFiveMovies[indexPath.item]
-        cell.configure(with: movie.posterPath)
+        cell.configure(with: movies[indexPath.item])
+        cell.delegate = self
         return cell
     }
 }
@@ -134,8 +128,16 @@ extension MovieListViewController: MovieListViewModelDelegate {
             self.pageControl.currentPage = 0
         }
     }
-    
-    
+}
+
+extension MovieListViewController: PopularMovieCarouselCellDelegate {
+    func didTapMoreButton(from cell: PopularMovieCarouselCell) {
+        let storyboard = UIStoryboard(name: "MoviesNowViewController", bundle: nil)
+        if let moviesNowVC = storyboard.instantiateViewController(withIdentifier: "MoviesNowViewController") as? MoviesNowViewController {
+            self.navigationController?.pushViewController(moviesNowVC, animated: true)
+        }
+
+    }
 }
 
 
