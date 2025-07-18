@@ -25,6 +25,8 @@ class PopularMovieCarouselCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         updateUIElements()
+        carouselImageView.accessibilityIdentifier = "carouselImageView"
+        moreButton.accessibilityIdentifier = "moreButton"
         
     }
     

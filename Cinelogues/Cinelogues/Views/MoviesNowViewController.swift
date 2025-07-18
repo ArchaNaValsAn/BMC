@@ -22,6 +22,10 @@ class MoviesNowViewController: UIViewController {
         setupCollectionView()
         setupSearchBar()
         NotificationCenter.default.addObserver(self, selector: #selector(favoritesUpdated(_:)), name: .favoritesUpdated, object: nil)
+        
+        popularMoviesCV.accessibilityIdentifier = "popularMoviesCollectionView" 
+        favoritesTabButton.accessibilityIdentifier = "favoritesTabButton"
+        movieSearchBar.accessibilityIdentifier = "movieSearchBar"
     }
     
     override func viewWillAppear(_ animated: Bool) {

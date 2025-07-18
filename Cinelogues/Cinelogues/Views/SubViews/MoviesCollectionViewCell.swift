@@ -25,6 +25,11 @@ class MoviesCollectionViewCell: UICollectionViewCell {
         super.awakeFromNib()
         updateUIElements()
         
+        posterImageView.accessibilityIdentifier = "posterImageView"
+        movieTitleLabel.accessibilityIdentifier = "movieTitleLabel"
+        averageRatingLabel.accessibilityIdentifier = "averageRatingLabel"
+        favoriteButton.accessibilityIdentifier = "favoriteButton"
+        
     }
     
     func configure(with movie: Movie, isFavorited: Bool) {

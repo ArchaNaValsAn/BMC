@@ -30,6 +30,16 @@ class MovieDetailsViewController: UIViewController {
         setupBlurBackground()
         setupCardStackView()
         setupDetails()
+        
+        baseView.accessibilityIdentifier = "baseView"
+        cardStackView.accessibilityIdentifier = "cardStackView"
+        posterImageView.accessibilityIdentifier = "posterImageView"
+        movieTitleLabel.accessibilityIdentifier = "movieTitleLabel"
+        favoriteButton.accessibilityIdentifier = "favoriteButton"
+        releaseDateLabel.accessibilityIdentifier = "releaseDateLabel"
+        overViewTextView.accessibilityIdentifier = "overViewTextView"
+        ratingLabel.accessibilityIdentifier = "ratingLabel"
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {

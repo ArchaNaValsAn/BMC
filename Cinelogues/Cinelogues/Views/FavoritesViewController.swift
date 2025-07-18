@@ -18,6 +18,7 @@ class FavoritesViewController: UIViewController {
         super.viewDidLoad()
         setupCollectionView()
         NotificationCenter.default.addObserver(self, selector: #selector(favoritesUpdated(_:)), name: .favoritesUpdated, object: nil)
+        favoritesCollectionView.accessibilityIdentifier = "favoritesCollectionView"
     }
     
     @objc private func favoritesUpdated(_ notification: Notification) {

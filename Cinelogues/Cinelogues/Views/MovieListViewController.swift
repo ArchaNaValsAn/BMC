@@ -28,6 +28,8 @@ class MovieListViewController: UIViewController {
         setupCarouselView()
         setupPageControl()
         
+        popularMovieCarouselCell.accessibilityIdentifier = "popularMovieCarouselCell"
+        
     }
     
    

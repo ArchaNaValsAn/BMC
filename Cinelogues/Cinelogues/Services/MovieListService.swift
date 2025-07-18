@@ -27,38 +27,40 @@ enum NetworkError: Error {
 }
 
 class MovieListService {
-    
     static let shared = MovieListService()
-    init(){}
+    
+    private let session: URLSession
+    
+    init(session: URLSession = .shared) {
+        self.session = session
+    }
      
     func fetchMovies(for category: MovieCategory, page: Int = 1, completion: @escaping (Result<[Movie], Error>) -> Void) {
         let urlString = "\(APIConfig.baseURL)\(category.rawValue)?api_key=\(APIConfig.apiKey)&language=en-US&page=\(page)"
-            
-            guard let url = URL(string: urlString) else {
-                completion(.failure(NetworkError.invalidURL))
+        
+        guard let url = URL(string: urlString) else {
+            completion(.failure(NetworkError.invalidURL))
+            return
+        }
+
+        session.dataTask(with: url) { data, _, error in
+            if let error = error {
+                completion(.failure(error))
                 return
             }
 
-            let task = URLSession.shared.dataTask(with: url) { data, _, error in
-                if let error = error {
-                    completion(.failure(error))
-                    return
-                }
-
-                guard let data = data else {
-                    completion(.failure(NetworkError.noData))
-                    return
-                }
-
-                do {
-                    let response = try JSONDecoder().decode(MovieListResponse.self, from: data)
-                    completion(.success(response.results))
-                } catch {
-                    completion(.failure(error))
-                }
+            guard let data = data else {
+                completion(.failure(NetworkError.noData))
+                return
             }
 
-            task.resume()
-        }
-    
+            do {
+                let response = try JSONDecoder().decode(MovieListResponse.self, from: data)
+                completion(.success(response.results))
+            } catch {
+                completion(.failure(error))
+            }
+        }.resume()
+    }
 }
+
