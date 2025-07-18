@@ -12,7 +12,7 @@ class FavoritesViewController: UIViewController {
     
     @IBOutlet weak var favoritesCollectionView: UICollectionView!
     
-    var favoriteMovies: [FavoriteMovies] = []
+   // var favoriteMovies: [FavoriteMovies] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,7 +22,7 @@ class FavoritesViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        favoriteMovies = CoreDataManager.shared.fetchFavorites()
+      //  favoriteMovies = CoreDataManager.shared.fetchFavorites()
         favoritesCollectionView.reloadData()
     }
     
@@ -50,7 +50,7 @@ class FavoritesViewController: UIViewController {
 
 extension FavoritesViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return favoriteMovies.count
+        return 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -58,8 +58,8 @@ extension FavoritesViewController: UICollectionViewDelegate, UICollectionViewDat
                fatalError("Unable to dequeue MoviesCollectionViewCell")
            }
 
-        let isFavorited = CoreDataManager.shared.isFavorited(id: "\(String(describing: favoriteMovies[indexPath.row].id))")
-        cell.configure(with: favoriteMovies[indexPath.row], isFavorited: isFavorited)
+//        let isFavorited = CoreDataManager.shared.isFavorited(id: "\(String(describing: favoriteMovies[indexPath.row].id))")
+       // cell.configure(with: favoriteMovies[indexPath.row], isFavorited: isFavorited)
 
            return cell
     }

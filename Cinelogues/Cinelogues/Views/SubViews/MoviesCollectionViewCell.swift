@@ -13,7 +13,6 @@ class MoviesCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var posterImageView: UIImageView!
     @IBOutlet weak var movieTitleLabel: UILabel!
-    @IBOutlet weak var releaseYearLabel: UILabel!
     @IBOutlet weak var averageRatingLabel: UILabel!
     @IBOutlet weak var favoriteButton: UIButton!
     
@@ -31,7 +30,7 @@ class MoviesCollectionViewCell: UICollectionViewCell {
     func configure(with movie: Movie, isFavorited: Bool) {
             self.isFavorited = isFavorited
         movieTitleLabel.text = movie.title
-        releaseYearLabel.text = movie.releaseDate
+        //releaseYearLabel.text = movie.releaseDate
         averageRatingLabel.text = "⭐️ \(movie.voteAverage)"
             
         posterImageView.loadImage(from: movie.posterPath)
@@ -41,16 +40,9 @@ class MoviesCollectionViewCell: UICollectionViewCell {
     
     private func updateUIElements() {
         movieTitleLabel.textColor = .white
-        releaseYearLabel.textColor = .white
         averageRatingLabel.textColor = .white
         
     }
-    
-//    private func updateFavoriteButton() {
-//           let imageName = isFavorited ? "heart.fill" : "heart"
-//           favoriteButton.setImage(UIImage(systemName: imageName), for: .normal)
-//           favoriteButton.tintColor = isFavorited ? .systemRed : .lightGray
-//       }
     
     @IBAction func favoriteButtonAction(_ sender: Any) {
         isFavorited.toggle()

@@ -22,17 +22,17 @@
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="PAp-py-NaJ">
                                 <rect key="frame" x="0.0" y="0.0" width="211" height="138.66666666666666"/>
                             </imageView>
-                            <stackView opaque="NO" contentMode="scaleAspectFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="qkD-sJ-bHf">
-                                <rect key="frame" x="73" y="148.66666666666666" width="65" height="23.333333333333343"/>
+                            <stackView opaque="NO" contentMode="scaleAspectFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="qkD-sJ-bHf">
+                                <rect key="frame" x="73" y="148.66666666666666" width="65" height="15.666666666666657"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YHV-f0-tzi">
-                                        <rect key="frame" x="0.0" y="3.9999999999999991" width="33" height="15.666666666666664"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="33" height="15.666666666666668"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YCj-nr-Nto">
-                                        <rect key="frame" x="41" y="4.6666666666666856" width="24" height="14"/>
+                                        <rect key="frame" x="41" y="0.0" width="24" height="15.666666666666666"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain"/>
                                         <connections>
@@ -41,23 +41,12 @@
                                     </button>
                                 </subviews>
                             </stackView>
-                            <stackView opaque="NO" contentMode="scaleToFill" spacing="18" translatesAutoresizingMaskIntoConstraints="NO" id="2tI-vi-aJZ">
-                                <rect key="frame" x="61.333333333333336" y="182" width="88.666666666666657" height="17"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E2b-4V-6bP">
-                                        <rect key="frame" x="0.0" y="0.0" width="35.333333333333336" height="17"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vKH-7w-doV">
-                                        <rect key="frame" x="53.333333333333329" y="0.0" width="35.333333333333329" height="17"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                            </stackView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vKH-7w-doV">
+                                <rect key="frame" x="88" y="174.33333333333334" width="35.333333333333343" height="24.666666666666657"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </stackView>
@@ -77,7 +66,6 @@
                 <outlet property="favoriteButton" destination="YCj-nr-Nto" id="F75-UY-g85"/>
                 <outlet property="movieTitleLabel" destination="YHV-f0-tzi" id="o8b-Sz-EYF"/>
                 <outlet property="posterImageView" destination="PAp-py-NaJ" id="UuA-Qk-Wr8"/>
-                <outlet property="releaseYearLabel" destination="E2b-4V-6bP" id="c2A-Av-F4l"/>
             </connections>
             <point key="canvasLocation" x="121.37404580152672" y="-9.5070422535211279"/>
         </collectionViewCell>

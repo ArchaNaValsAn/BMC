@@ -8,7 +8,7 @@
 import UIKit
 
 class MoviesNowViewController: UIViewController {
-
+    
     @IBOutlet weak var popularMoviesCV: UICollectionView!
     @IBOutlet weak var movieSearchBar: UISearchBar!    
     @IBOutlet weak var favoritesTabButton: UIButton!
@@ -34,7 +34,7 @@ class MoviesNowViewController: UIViewController {
         let image = UIImage(systemName: "heart.fill")
         favoritesTabButton.setImage(image, for: .normal)
         favoritesTabButton.tintColor = .systemRed
-       
+        
         
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -50,23 +50,23 @@ class MoviesNowViewController: UIViewController {
     private func setupSearchBar() {
         movieSearchBar.barTintColor = .black
         movieSearchBar.backgroundImage = UIImage()
-            
-            if let textField = movieSearchBar.value(forKey: "searchField") as? UITextField {
-                textField.backgroundColor = UIColor.black
-                textField.textColor = .white
-                textField.font = UIFont.systemFont(ofSize: 14)
-                textField.attributedPlaceholder = NSAttributedString(
-                    string: "Search here...",
-                    attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray]
-                )
-                textField.layer.cornerRadius = 10
-                textField.clipsToBounds = true
-            }
-
+        
+        if let textField = movieSearchBar.value(forKey: "searchField") as? UITextField {
+            textField.backgroundColor = UIColor.black
+            textField.textColor = .white
+            textField.font = UIFont.systemFont(ofSize: 14)
+            textField.attributedPlaceholder = NSAttributedString(
+                string: "Search here...",
+                attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray]
+            )
+            textField.layer.cornerRadius = 10
+            textField.clipsToBounds = true
+        }
+        
         movieSearchBar.setImage(UIImage(systemName: "xmark.circle"), for: .clear, state: .normal)
-
-
-
+        
+        
+        
     }
     
     func searchMovies(with searchText: String) {
@@ -78,7 +78,7 @@ class MoviesNowViewController: UIViewController {
             popularMoviesCV.reloadData()
             return
         }
-
+        
         isSearching = true
         filteredMovies = movies.filter {
             $0.title.lowercased().contains(searchText.lowercased())
@@ -87,7 +87,7 @@ class MoviesNowViewController: UIViewController {
                 result.append(movie)
             }
         }
-
+        
         if filteredMovies.isEmpty {
             showNoResultsAlert(for: searchText)
         }
@@ -109,14 +109,15 @@ class MoviesNowViewController: UIViewController {
         
         let storyboard = UIStoryboard(name: "FavoritesViewController", bundle: nil)
         if let favoritesVC = storyboard.instantiateViewController(withIdentifier: "FavoritesViewController") as? FavoritesViewController {
-           // moviesNowVC.viewModel = self.viewModel
-//            moviesNowVC.movies = self.movies
+            // moviesNowVC.viewModel = self.viewModel
+            //            moviesNowVC.movies = self.movies
             self.navigationController?.pushViewController(favoritesVC, animated: true)
         }
         
-
-
-
+        
+        
+        
+    }
 }
 
 extension MoviesNowViewController : UICollectionViewDataSource, UICollectionViewDelegate {
