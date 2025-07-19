@@ -17,5 +17,9 @@
 - A TMDb API Key
 
  ### Installation
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/ArchaNaValsAn/BMC.git
+   cd cinelogues
 
 
