@@ -98,16 +98,19 @@ class MovieDetailsViewController: UIViewController {
     
     @IBAction func favoriteButtonAction(_ sender: Any) {
         guard let movie = movie else { return }
+
+            let movieID = String(movie.id)
+            isFavorited.toggle()
+            favoriteButton.updateFavoriteAppearance(isFavorited: isFavorited)
+
+            if FavoriteMovieManager.shared.isFavorite(movieID: movieID) {
+                FavoriteMovieManager.shared.removeFromFavorites(movieID: movieID)
+            } else {
+                FavoriteMovieManager.shared.addToFavorites(movie: movie)
+            }
         
-        let movieID = String(movie.id)
-        isFavorited.toggle()
-        favoriteButton.updateFavoriteAppearance(isFavorited: isFavorited)
-        
-        if FavoriteMovieManager.shared.isFavorite(movieID: movieID) {
-            FavoriteMovieManager.shared.removeFromFavorites(movieID: movieID)
-        } else {
-            FavoriteMovieManager.shared.addToFavorites(movie: movie)
-        }
-        dismiss(animated: true, completion: nil)
+            NotificationCenter.default.post(name: .favoritesUpdated, object: movieID)
+
+            dismiss(animated: true, completion: nil)
     }
 }

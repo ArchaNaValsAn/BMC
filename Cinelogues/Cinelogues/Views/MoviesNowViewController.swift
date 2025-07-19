@@ -23,8 +23,12 @@ class MoviesNowViewController: UIViewController {
         super.viewDidLoad()
         setupCollectionView()
         setupSearchBar()
-        NotificationCenter.default.addObserver(self, selector: #selector(favoritesUpdated(_:)), name: .favoritesUpdated, object: nil)
-        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(favoritesUpdated(_:)),
+            name: .favoritesUpdated,
+            object: nil
+        )
         popularMoviesCV.accessibilityIdentifier = "popularMoviesCollectionView"
         favoritesTabButton.accessibilityIdentifier = "favoritesTabButton"
         movieSearchBar.accessibilityIdentifier = "movieSearchBar"
