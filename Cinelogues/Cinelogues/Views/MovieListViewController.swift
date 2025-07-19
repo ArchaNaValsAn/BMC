@@ -14,9 +14,19 @@ class MovieListViewController: UIViewController {
     private let viewModel = MovieListViewModel()
     private let pageControl = UIPageControl()
     private var hasScrolledToInitialIndex = false
+    private let activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.color = .white
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        return indicator
+    }()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setupActivityIndicator()
+        activityIndicator.startAnimating()
         
         viewModel.delegate = self
         viewModel.fetchAllCategories()
@@ -26,6 +36,7 @@ class MovieListViewController: UIViewController {
         
         popularMovieCarouselCell.accessibilityIdentifier = "popularMovieCarouselCell"
     }
+    
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -40,6 +51,16 @@ class MovieListViewController: UIViewController {
                 self.hasScrolledToInitialIndex = true
             }
         }
+    }
+    
+    private func setupActivityIndicator() {
+        popularMovieCarouselCell.isHidden = true
+        pageControl.isHidden = true
+        view.addSubview(activityIndicator)
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
     }
     
     private func setupCarouselView() {
@@ -148,6 +169,9 @@ extension MovieListViewController: MovieListViewModelDelegate {
     
     func didUpdateCombinedMovies(_ movies: [Movie]) {
         DispatchQueue.main.async {
+            self.activityIndicator.stopAnimating()
+            self.popularMovieCarouselCell.isHidden = false
+            self.pageControl.isHidden = false
             self.popularMovieCarouselCell.reloadData()
             self.pageControl.numberOfPages = self.viewModel.topFiveMovies.count
             self.pageControl.currentPage = 0
