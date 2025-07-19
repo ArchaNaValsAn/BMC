@@ -23,15 +23,13 @@ class MoviesNowViewController: UIViewController {
         super.viewDidLoad()
         setupCollectionView()
         setupSearchBar()
+        setAccessibilirtIdentifiers() 
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(favoritesUpdated(_:)),
             name: .favoritesUpdated,
             object: nil
         )
-        popularMoviesCV.accessibilityIdentifier = "popularMoviesCollectionView"
-        favoritesTabButton.accessibilityIdentifier = "favoritesTabButton"
-        movieSearchBar.accessibilityIdentifier = "movieSearchBar"
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -60,6 +58,12 @@ class MoviesNowViewController: UIViewController {
                 popularMoviesCV.reloadItems(at: [indexPath])
             }
         }
+    }
+    
+    func setAccessibilirtIdentifiers() {
+        popularMoviesCV.accessibilityIdentifier = "popularMoviesCollectionView"
+        favoritesTabButton.accessibilityIdentifier = "favoritesTabButton"
+        movieSearchBar.accessibilityIdentifier = "movieSearchBar"
     }
     
     private func setupCollectionView() {

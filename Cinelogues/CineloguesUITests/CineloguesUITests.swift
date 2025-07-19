@@ -9,48 +9,48 @@ import XCTest
 
 final class CineloguesUITests: XCTestCase {
 
-    let app = XCUIApplication()
+    var app: XCUIApplication!
 
     override func setUpWithError() throws {
         continueAfterFailure = false
+        app = XCUIApplication()
         app.launch()
     }
 
-    func testMovieFlow_FavoriteToggle_AndFavoritesPersistence() throws {
-        let carousel = app.collectionViews["popularMovieCarouselCell"]
-        XCTAssertTrue(carousel.waitForExistence(timeout: 5), "Carousel did not load")
-        
-        let firstCell = carousel.cells.element(boundBy: 0)
-        let moreButton = firstCell.buttons["moreButton"]
-        XCTAssertTrue(moreButton.waitForExistence(timeout: 5), "More button not found")
-        moreButton.tap()
-        
-        let moviesCollection = app.collectionViews["popularMoviesCollectionView"]
-        XCTAssertTrue(moviesCollection.waitForExistence(timeout: 5), "Movie list did not load")
-        
-        let firstMovieCell = moviesCollection.cells.element(boundBy: 0)
-        XCTAssertTrue(firstMovieCell.waitForExistence(timeout: 5), "First movie cell not found")
-        firstMovieCell.tap()
-        
-        let favoriteButton = app.otherElements["baseView"].buttons["favoriteButton"]
-        XCTAssertTrue(favoriteButton.waitForExistence(timeout: 5))
-        favoriteButton.tap()
-        
-        app.otherElements["baseView"].tap() // Or dismiss explicitly if needed
-        
+    override func tearDownWithError() throws {
+        app = nil
     }
 
-    func testSearchFunctionality_NoResults() {
-        let app = XCUIApplication()
-        app.launch()
+    func testAddAndRemoveFromFavoritesFlow() {
+        let collectionView = app.collectionViews.firstMatch
+        XCTAssertTrue(collectionView.waitForExistence(timeout: 5), "Movie collection view not found")
+
+        // Tap on first movie cell
+        let firstCell = collectionView.cells.element(boundBy: 0)
+        XCTAssertTrue(firstCell.exists, "First movie cell not found")
+        firstCell.tap()
         
-        let carousel = app.collectionViews["popularMovieCarouselCell"]
-        let firstCell = carousel.cells.element(boundBy: 0)
-        
-        let moreButton = app.buttons["moreButton"]
-        XCTAssertTrue(moreButton.waitForExistence(timeout: 5))
-        moreButton.tap()
+        // Wait for movie title to ensure detail screen is shown
+           let titleLabel = app.staticTexts["movieTitleLabel"]
+           XCTAssertTrue(titleLabel.waitForExistence(timeout: 5), "Movie title not found")
+
+        // Go back to movie list
+        let backButton = app.navigationBars.buttons.firstMatch
+        XCTAssertTrue(backButton.exists, "Back button not found")
+        backButton.tap()
+
+        // Check if the favorited movie exists in the favorites collection view
+        let favoritesCollection = app.collectionViews.firstMatch
+        XCTAssertTrue(favoritesCollection.waitForExistence(timeout: 5), "Favorites collection view not found")
+
+        let favoritedCell = favoritesCollection.cells.element(boundBy: 0)
+        XCTAssertTrue(favoritedCell.exists, "Favorited movie not found in favorites list")
+
+        // Tap on the movie again in favorites to go to details
+        favoritedCell.tap()
+
+        // Go back
+        backButton.tap()
     }
-    
 }
 

@@ -85,7 +85,7 @@ class MovieDetailsViewController: UIViewController {
         cardStackView.accessibilityIdentifier = "cardStackView"
         posterImageView.accessibilityIdentifier = "posterImageView"
         movieTitleLabel.accessibilityIdentifier = "movieTitleLabel"
-        favoriteButton.accessibilityIdentifier = "favoriteButton"
+        favoriteButton.accessibilityIdentifier = "detailsFavoriteButton"
         releaseDateLabel.accessibilityIdentifier = "releaseDateLabel"
         overViewTextView.accessibilityIdentifier = "overViewTextView"
         ratingLabel.accessibilityIdentifier = "ratingLabel"
