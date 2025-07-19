@@ -50,7 +50,10 @@ class FavoritesViewController: UIViewController {
         let entities = FavoriteMovieManager.shared.fetchAllFavorites()
         favoriteMovies = entities.compactMap { Movie(from: $0) }
         favoritesCollectionView.reloadData()
-        showEmptyFavoritesAlert()
+        if entities.isEmpty {
+            showEmptyFavoritesAlert()
+        }
+        
     }
     
     private func showEmptyFavoritesAlert() {
