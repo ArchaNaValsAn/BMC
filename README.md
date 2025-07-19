@@ -22,4 +22,10 @@
    git clone https://github.com/ArchaNaValsAn/BMC.git
    cd cinelogues
 
+##Note
+⚠️ TMDb access may not work without a VPN in certain regions.
+If you’re unable to see movie data loading (like the carousel or movie list), please connect to a VPN and try again.
+
+This is a known limitation due to regional API restrictions, not an issue with the app itself.
+
 
